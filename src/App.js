@@ -39,7 +39,7 @@ function App() {
               </Col>
               <Col>
                 <Button name='add' id='add' type='submit' color='primary'>
-                  Submit
+                  Add
                 </Button>
               </Col>
             </Row>
