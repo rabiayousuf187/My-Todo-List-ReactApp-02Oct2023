@@ -1,19 +1,31 @@
 // import logo from './logo.svg';
 import './App.css';
-import { Form, Row, Button, Col, Label, Input, Container } from 'reactstrap';
+import { Form, Row, Button, Col, Input, Container } from 'reactstrap';
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-uuidv4();
+// uuidv4();
 
 function App() {
   let [value, setValue] = useState("")
+  let todo = [];
+  // let [todo, setTodo] = useState([])
   let [todos, setTodos] = useState([])
-  let handleSubmit = () => {
+  let addTask = (currentTodo) =>{
+    setTodos([...todos, currentTodo]);
+  }
+  let handleSubmit = (e) => {
+    e.preventDefault();
 
     alert('List Added !');
+    console.log("prev todo value ==== ", todos)
+    console.log("settteddd value ==== ", value)
 
-    setTodos(...todos, { id: uuidv4(), task: value });
+    todo = { id: uuidv4(), task: value };
+    console.log("save todo ==== ", todo)
+
+    addTask(todo);
     console.log("set TODOOOOS === ", todos);
+    setValue("");
     // setValue(setValue(e.target.value))
   }
 
@@ -29,11 +41,12 @@ function App() {
                   id="task"
                   name="task"
                   placeholder="Enter your Future Task"
-                  type="email"
+                  type="text"
                   value={value}
                   onChange={(e) => {
                     console.log("INPUT ====", e.target.value);
-                    setValue(e.target.value)
+                    setValue(e.currentTarget.value);
+                    console.log("setted value ==== ", value);
                   }}
                 />
               </Col>
