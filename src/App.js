@@ -1,6 +1,6 @@
 // import logo from './logo.svg';
 import './App.css';
-import { Form, Row, Button, Col, Input, Container, Table } from 'reactstrap';
+import { Form, Row, Button, Col, Input, Container, Table, Alert } from 'reactstrap';
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 // uuidv4();
@@ -10,6 +10,7 @@ function App() {
   let [todo, setTodo] = useState([])
   let [todoList, setTodoList] = useState([]);
   let [completeList, setCompleteList] = useState([]);
+  let [alarm, setAlarm] = useState({});
 
   // let addTask = (currentTodo) => {
   //   setTodoList([...todoList, currentTodo])
@@ -93,24 +94,20 @@ function App() {
         </div>
         <div className='table-div'>
           <div>
-            <Button
-              color="primary"
-              size="lg"
-            >
-              Large
+            <Button color='secondary' onClick={()=>{
+              setTodoList(...todoList)
+            }}>
+              Active
             </Button>
             {' '}
-            <Button>
-              Normal
+            <Button color=''onClick={()=>{
+              console.log("Show COmplete List")
+              completeList !== undefined? setTodoList(...completeList):
+              <Alert color='danger'>No Task has Been Completed Yet</Alert>
+              setAlarm({color:"danger", msg: "No Task has Been Completed Yet"})
+            }}>
+              Completed
             </Button>
-            {' '}
-            <Button
-              color="success"
-              size="sm"
-            >
-              Small
-            </Button>
-            {' '}
           </div>
           <Table striped hover>
             <thead>
@@ -128,6 +125,7 @@ function App() {
             </thead>
             <tbody>
               {
+                todoList !== undefined? 
                 todoList.map((val, ind) => {
                   console.log("value Row ==== ", val);
                   return (
@@ -140,9 +138,9 @@ function App() {
                         <Button color='danger' onClick={() => { editTask(val.id) }}>Edit</Button>
                       </td>
                     </tr>);
-                })
-
-              }
+                }) 
+                : completeList === undefined ? <Alert color={alarm.color}>{alarm.msg}</Alert> : ""
+                }
             </tbody>
           </Table>
         </div>
