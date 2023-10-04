@@ -22,7 +22,7 @@ function App() {
     console.log("prev todo value ==== ", todoList);
     console.log("settteddd value ==== ", value);
 
-    todo.isEditing === true ?
+    todo.isEditing === true && todo !== undefined ?
       setTodoList(todoList.map((val, ind) => {
         return val.id === todo.id ? { id: todo.id, task: value, isEditing: false, isCompleted: todo.isCompleted } : val;
       }))
@@ -48,9 +48,13 @@ function App() {
   let completeTask = (id) => {
     console.log(`completeTask ${id}`);
     setCompleteList(todoList.filter((val) => {
+      return (val.id === id)
+    }));
+    setTodoList(todoList.filter((val) => {
       return (val.id !== id)
     }));
-    console.log(`after delete todoList ${todoList}`);
+
+    console.log(`after ccomplete todoList ${todoList}`);
   }
   let editTask = (id) => {
     console.log(`Edit Task ${id}`);
@@ -95,15 +99,19 @@ function App() {
         <div className='table-div'>
           <div>
             <Button color='secondary' onClick={()=>{
-              setTodoList(...todoList)
+              console.log("Show Active list")
+              setTodoList(todoList)
+              console.log("todolist == ",todoList)
+              
             }}>
               Active
             </Button>
             {' '}
             <Button color=''onClick={()=>{
               console.log("Show COmplete List")
-              completeList !== undefined? setTodoList(...completeList):
-              <Alert color='danger'>No Task has Been Completed Yet</Alert>
+              setAlarm({color:"danger", msg: "No Task has Been Completed Yet"});
+              completeList !== undefined? setTodoList(completeList):
+              // <Alert color='danger'>No Task has Been Completed Yet</Alert>
               setAlarm({color:"danger", msg: "No Task has Been Completed Yet"})
             }}>
               Completed
@@ -138,9 +146,8 @@ function App() {
                         <Button color='danger' onClick={() => { editTask(val.id) }}>Edit</Button>
                       </td>
                     </tr>);
-                }) 
-                : completeList === undefined ? <Alert color={alarm.color}>{alarm.msg}</Alert> : ""
-                }
+                }): completeList === undefined ? ()=>{return <tr><Alert color={alarm.color}>{alarm.msg}</Alert></tr>} : null
+              }
             </tbody>
           </Table>
         </div>
