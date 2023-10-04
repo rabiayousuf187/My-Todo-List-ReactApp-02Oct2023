@@ -9,10 +9,11 @@ function App() {
   let [value, setValue] = useState("")
   let [todo, setTodo] = useState([])
   let [todoList, setTodoList] = useState([]);
+  let [completeList, setCompleteList] = useState([]);
 
-  let addTask = (currentTodo) => {
-    setTodoList([...todoList, currentTodo])
-  }
+  // let addTask = (currentTodo) => {
+  //   setTodoList([...todoList, currentTodo])
+  // }
   let handleSubmit = (e) => {
     e.preventDefault();
 
@@ -20,15 +21,15 @@ function App() {
     console.log("prev todo value ==== ", todoList);
     console.log("settteddd value ==== ", value);
 
-      todo.isEditing === true ? 
-         setTodoList( todoList.map((val,ind)=>{
-         return val.id === todo.id ? { id: todo.id, task: value, isEditing: false } : val;
-        }))
-     : setTodoList([...todoList, { id: uuidv4(), task: value, isEditing: false }]);
-        console.log("save todo ==== ", todo)
-        // addTask(todo);
-        console.log("set TODOOOOS === ", todoList);
-      
+    todo.isEditing === true ?
+      setTodoList(todoList.map((val, ind) => {
+        return val.id === todo.id ? { id: todo.id, task: value, isEditing: false, isCompleted: todo.isCompleted } : val;
+      }))
+      : setTodoList([...todoList, { id: uuidv4(), task: value, isEditing: false, isCompleted: false }]);
+    console.log("save todo ==== ", todo)
+    // addTask(todo);
+    console.log("set TODOOOOS === ", todoList);
+
 
     setValue("");
     setTodo([]);
@@ -41,6 +42,13 @@ function App() {
       return (val.id !== id)
     }));
 
+    console.log(`after delete todoList ${todoList}`);
+  }
+  let completeTask = (id) => {
+    console.log(`completeTask ${id}`);
+    setCompleteList(todoList.filter((val) => {
+      return (val.id !== id)
+    }));
     console.log(`after delete todoList ${todoList}`);
   }
   let editTask = (id) => {
@@ -84,7 +92,27 @@ function App() {
           </Form>
         </div>
         <div className='table-div'>
-          <Table>
+          <div>
+            <Button
+              color="primary"
+              size="lg"
+            >
+              Large
+            </Button>
+            {' '}
+            <Button>
+              Normal
+            </Button>
+            {' '}
+            <Button
+              color="success"
+              size="sm"
+            >
+              Small
+            </Button>
+            {' '}
+          </div>
+          <Table striped hover>
             <thead>
               <tr>
                 <th>
@@ -107,12 +135,14 @@ function App() {
                       <th scope="row" key={val.id}>{ind + 1}</th>
                       <td>{val.task}</td>
                       <td className='status'>
-                        <Button color='success' onClick={() => { deleteTask(val.id) }}>Completed</Button>
+                        <Button color='success' onClick={() => { completeTask(val.id) }}>Done</Button>
                         <Button color='warning' onClick={() => { deleteTask(val.id) }}>Delete</Button>
                         <Button color='danger' onClick={() => { editTask(val.id) }}>Edit</Button>
                       </td>
                     </tr>);
-                })}
+                })
+
+              }
             </tbody>
           </Table>
         </div>
