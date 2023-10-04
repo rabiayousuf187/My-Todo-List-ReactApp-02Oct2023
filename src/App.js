@@ -106,9 +106,10 @@ function App() {
                     <tr key={val.id}>
                       <th scope="row" key={val.id}>{ind + 1}</th>
                       <td>{val.task}</td>
-                      <td>
-                        <Button onClick={() => { deleteTask(val.id) }}>Delete</Button>
-                        <Button onClick={() => { editTask(val.id) }}>Edit</Button>
+                      <td className='status'>
+                        <Button color='success' onClick={() => { deleteTask(val.id) }}>Completed</Button>
+                        <Button color='warning' onClick={() => { deleteTask(val.id) }}>Delete</Button>
+                        <Button color='danger' onClick={() => { editTask(val.id) }}>Edit</Button>
                       </td>
                     </tr>);
                 })}
