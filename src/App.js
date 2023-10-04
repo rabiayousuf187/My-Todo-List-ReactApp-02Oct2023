@@ -9,12 +9,22 @@ function App() {
   let [value, setValue] = useState("")
   let [todo, setTodo] = useState([])
   let [todoList, setTodoList] = useState([]);
+  let [saveList, setSaveList] = useState([]);
   let [completeList, setCompleteList] = useState([]);
   let [alarm, setAlarm] = useState({});
+  let [color1, setColor1] = useState('secondary');
+  let [color2, setColor2] = useState('');
 
-  // let addTask = (currentTodo) => {
-  //   setTodoList([...todoList, currentTodo])
+  // let addTask = () => {
+  //   setShowList([...todoList])
   // }
+  let toggleColor = () =>{
+
+    console.log("toggled color")
+    setColor1( color1 === "" ? "secondary" : "" );
+    setColor2( color2 === "" ? "secondary" : "" );
+  }
+
   let handleSubmit = (e) => {
     e.preventDefault();
 
@@ -28,8 +38,10 @@ function App() {
       }))
       : setTodoList([...todoList, { id: uuidv4(), task: value, isEditing: false, isCompleted: false }]);
     console.log("save todo ==== ", todo)
-    // addTask(todo);
-    console.log("set TODOOOOS === ", todoList);
+    // addTask();
+    setSaveList([...todoList])
+    // console.log("set TODOOOOS === ", todoList);
+    console.log("set saveList === ", saveList);
 
 
     setValue("");
@@ -47,9 +59,10 @@ function App() {
   }
   let completeTask = (id) => {
     console.log(`completeTask ${id}`);
-    setCompleteList(todoList.filter((val) => {
+    let complete =  todoList.find((val) => {
       return (val.id === id)
-    }));
+    })
+    setCompleteList([...completeList , { id: id, task: complete.task, isEditing: false, isCompleted: true }]);
     setTodoList(todoList.filter((val) => {
       return (val.id !== id)
     }));
@@ -64,7 +77,7 @@ function App() {
     // console.log(`Edit value ===  `,editValue[0].task);
     console.log(`Edit value ===  `, editValue.task);
     setValue(editValue.task);
-    setTodo({ id: id, task: editValue.task, isEditing: true });
+    setTodo({ id: id, task: editValue.task, isEditing: true, isCompleted: false  });
 
   }
   return (
@@ -98,17 +111,24 @@ function App() {
         </div>
         <div className='table-div'>
           <div>
-            <Button color='secondary' onClick={()=>{
+            <Button id="active" color={color1}  onClick={()=>{
               console.log("Show Active list")
-              setTodoList(todoList)
+              toggleColor();
+              setSaveList(todoList);
+              setTodoList(saveList);
+
               console.log("todolist == ",todoList)
-              
+              // setShowList(todoList);
             }}>
               Active
             </Button>
             {' '}
-            <Button color=''onClick={()=>{
-              console.log("Show COmplete List")
+            <Button id ='complete' color={color2} onClick={()=>{
+              console.log("Show Complete List", completeList);
+              toggleColor();
+              
+              setSaveList(todoList);
+              // setTodoList(completeList);
               setAlarm({color:"danger", msg: "No Task has Been Completed Yet"});
               completeList !== undefined? setTodoList(completeList):
               // <Alert color='danger'>No Task has Been Completed Yet</Alert>
@@ -141,9 +161,11 @@ function App() {
                       <th scope="row" key={val.id}>{ind + 1}</th>
                       <td>{val.task}</td>
                       <td className='status'>
-                        <Button color='success' onClick={() => { completeTask(val.id) }}>Done</Button>
+                        
+                        {val.isCompleted === false ? <Button color='success' onClick={() => { completeTask(val.id) }}>Done</Button> : null}
+                        {val.isCompleted === false ? <Button color='danger' onClick={() => { editTask(val.id) }}>Edit</Button> : null}
                         <Button color='warning' onClick={() => { deleteTask(val.id) }}>Delete</Button>
-                        <Button color='danger' onClick={() => { editTask(val.id) }}>Edit</Button>
+                        
                       </td>
                     </tr>);
                 }): completeList === undefined ? ()=>{return <tr><Alert color={alarm.color}>{alarm.msg}</Alert></tr>} : null
